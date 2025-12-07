@@ -1,7 +1,7 @@
-
 import { MoviesProps } from "@/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 export default async function handler (request: NextApiRequest, response: NextApiResponse)  {
+
 
   if (request.method === "POST") {
     const { year, page, genre } = request.body;
@@ -13,12 +13,16 @@ export default async function handler (request: NextApiRequest, response: NextAp
       {
         headers: {
           "x-rapidapi-host": "moviesdatabase.p.rapidapi.com",
-          "x-rapidapi-key": `${process.env.MOVIE_API_KEY}`,
+          "x-rapidapi-key":"2f3966aacfmshcf8db9627be20abp14877bjsn81f985f04c5e",
         },
       }
     );
 
-    if (!resp.ok) throw new Error("Failed to fetch movies");
+  if (!resp.ok) {
+  const text = await resp.text();
+  console.error("ERR:", resp.status, text);
+  throw new Error(`RapidAPI error: ${resp.status}`);
+}
 
     const moviesResponse = await resp.json();
     const movies: MoviesProps[] = moviesResponse.results;
